@@ -39,6 +39,7 @@ let current_x = 0
 let wallmaker: Sprite = null
 let scare: Sprite = null
 let timer1 = 0
+game.showLongText("Start?", DialogLayout.Center)
 game.setGameOverScoringType(game.ScoringType.None)
 timer1 = -180
 Render.takeoverSceneSprites()
