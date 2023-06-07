@@ -9,12 +9,10 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.jumpscare, function (sprite, oth
     if (timer1 <= -180) {
         timer1 = 60
         sprites.destroyAllSpritesOfKind(SpriteKind.jumpscare)
-        current_x = Render.getRenderSpriteInstance().x
-        current_y = Render.getRenderSpriteInstance().y
         scene.setBackgroundImage(assets.image`scare1`)
         tiles.setCurrentTilemap(tilemap`level2`)
-        Render.getRenderSpriteInstance().x = 155
-        Render.getRenderSpriteInstance().y = 115
+        Render.moveWithController(0, 0, 0)
+        cycle = 1
     }
 })
 scene.onOverlapTile(SpriteKind.jumpscare, assets.tile`jumpscare`, function (sprite, location) {
@@ -26,12 +24,8 @@ controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     game.setGameOverEffect(false, effects.smiles)
     sprites.destroyAllSpritesOfKind(SpriteKind.jumpscare)
-    current_x = Render.getRenderSpriteInstance().x
-    current_y = Render.getRenderSpriteInstance().y
     scene.setBackgroundImage(assets.image`scare1`)
     tiles.setCurrentTilemap(tilemap`level2`)
-    Render.getRenderSpriteInstance().x = 155
-    Render.getRenderSpriteInstance().y = 115
     pause(2000)
     scene.setBackgroundImage(img`
         eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
@@ -157,11 +151,11 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
         `)
     game.gameOver(false)
 })
-let current_y = 0
-let current_x = 0
+let cycle = 0
 let wallmaker: Sprite = null
 let scare: Sprite = null
 let timer1 = 0
+Render.moveWithController(2, 3, 0)
 game.showLongText("Start?", DialogLayout.Center)
 game.setGameOverScoringType(game.ScoringType.None)
 timer1 = -180
@@ -339,21 +333,28 @@ tiles.placeOnRandomTile(Render.getRenderSpriteInstance(), assets.tile`transparen
 monster.setFlag(SpriteFlag.GhostThroughWalls, true)
 monster.follow(Render.getRenderSpriteInstance(), 10)
 forever(function () {
-    pause(5000)
+    pause(1000)
     info.setScore(Math.round(Math.sqrt(Math.abs((Render.getRenderSpriteInstance().x - monster.x) * (Render.getRenderSpriteInstance().x - monster.x) + (Render.getRenderSpriteInstance().y - monster.y) * (Render.getRenderSpriteInstance().y - monster.y)))))
 })
 forever(function () {
-    if (false) {
-        if (scene.backgroundImage() == assets.image`scare1`) {
+    if (0 < cycle) {
+        pause(100)
+        if (cycle == 1) {
+            scene.setBackgroundImage(assets.image`scare0`)
+            cycle = 2
+        } else if (cycle == 2) {
+            scene.setBackgroundImage(assets.image`scare2`)
+            cycle = 1
+        } else if (cycle == 3) {
             scene.setBackgroundImage(assets.image`scare1`)
-        } else if (scene.backgroundImage() == assets.image`scare1`) {
-            scene.setBackgroundImage(assets.image`scare1`)
+            cycle = 2
         }
     }
 })
 forever(function () {
     timer1 += -1
     if (timer1 == 0) {
+        cycle = 0
         scene.setBackgroundImage(img`
             eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
             eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
@@ -477,8 +478,6 @@ forever(function () {
             eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
             `)
         tiles.setCurrentTilemap(tilemap`level1`)
-        Render.getRenderSpriteInstance().x = current_x
-        Render.getRenderSpriteInstance().y = current_y
         for (let value of tiles.getTilesByType(assets.tile`jumpscare`)) {
             scare = sprites.create(img`
                 e e e e e e e e e e e e e e e e 
@@ -523,5 +522,6 @@ forever(function () {
             tiles.setWallAt(wallmaker.tilemapLocation(), true)
             sprites.destroy(wallmaker)
         }
+        Render.moveWithController(2, 3, 0)
     }
 })
