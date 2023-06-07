@@ -1,21 +1,29 @@
 namespace SpriteKind {
     export const jumpscare = SpriteKind.create()
+    export const wallmaker = SpriteKind.create()
 }
-scene.onOverlapTile(SpriteKind.Player, assets.tile`jumpscare`, function (sprite, location) {
+sprites.onOverlap(SpriteKind.Player, SpriteKind.jumpscare, function (sprite, otherSprite) {
     if (timer1 <= -180) {
         timer1 = 60
+        sprites.destroyAllSpritesOfKind(SpriteKind.jumpscare)
         current_x = Render.getRenderSpriteInstance().x
         current_y = Render.getRenderSpriteInstance().y
-        Render.toggleViewMode()
         scene.setBackgroundImage(assets.image`scare1`)
-        tiles.setTileAt(location, assets.tile`transparency16`)
         tiles.setCurrentTilemap(tilemap`level2`)
         Render.getRenderSpriteInstance().x = 155
         Render.getRenderSpriteInstance().y = 115
     }
 })
+scene.onOverlapTile(SpriteKind.jumpscare, assets.tile`jumpscare`, function (sprite, location) {
+    tiles.setTileAt(location, assets.tile`transparency16`)
+})
+controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
+    Render.toggleViewMode()
+})
 let current_y = 0
 let current_x = 0
+let wallmaker: Sprite = null
+let scare: Sprite = null
 let timer1 = 0
 timer1 = -180
 Render.takeoverSceneSprites()
@@ -142,10 +150,53 @@ scene.setBackgroundImage(img`
     eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
     eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
     `)
+for (let value of tiles.getTilesByType(assets.tile`jumpscare`)) {
+    scare = sprites.create(img`
+        e e e e e e e e e e e e e e e e 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        e e e e e e e e e e e e e e e e 
+        `, SpriteKind.jumpscare)
+    scare.setPosition(value.x, value.y)
+}
+for (let value of tiles.getTilesByType(assets.tile`black`)) {
+    wallmaker = sprites.create(img`
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        `, SpriteKind.wallmaker)
+    wallmaker.setPosition(value.x, value.y)
+    tiles.setWallAt(wallmaker.tilemapLocation(), true)
+    sprites.destroy(wallmaker)
+}
 forever(function () {
     timer1 += -1
     if (timer1 == 0) {
-        Render.toggleViewMode()
         scene.setBackgroundImage(img`
             eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
             eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
@@ -271,5 +322,49 @@ forever(function () {
         tiles.setCurrentTilemap(tilemap`level1`)
         Render.getRenderSpriteInstance().x = current_x
         Render.getRenderSpriteInstance().y = current_y
+        for (let value of tiles.getTilesByType(assets.tile`jumpscare`)) {
+            scare = sprites.create(img`
+                e e e e e e e e e e e e e e e e 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                e e e e e e e e e e e e e e e e 
+                `, SpriteKind.jumpscare)
+            scare.setPosition(value.x, value.y)
+        }
+        for (let value of tiles.getTilesByType(assets.tile`black`)) {
+            wallmaker = sprites.create(img`
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+                `, SpriteKind.wallmaker)
+            wallmaker.setPosition(value.x, value.y)
+            tiles.setWallAt(wallmaker.tilemapLocation(), true)
+            sprites.destroy(wallmaker)
+        }
     }
 })
