@@ -343,6 +343,15 @@ forever(function () {
     info.setScore(Math.round(Math.sqrt(Math.abs((Render.getRenderSpriteInstance().x - monster.x) * (Render.getRenderSpriteInstance().x - monster.x) + (Render.getRenderSpriteInstance().y - monster.y) * (Render.getRenderSpriteInstance().y - monster.y)))))
 })
 forever(function () {
+    if (false) {
+        if (scene.backgroundImage() == assets.image`scare1`) {
+            scene.setBackgroundImage(assets.image`scare1`)
+        } else if (scene.backgroundImage() == assets.image`scare1`) {
+            scene.setBackgroundImage(assets.image`scare1`)
+        }
+    }
+})
+forever(function () {
     timer1 += -1
     if (timer1 == 0) {
         scene.setBackgroundImage(img`
