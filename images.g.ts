@@ -126,6 +126,24 @@ namespace myImages {
 66666666666666666666666666666666666666666666666666666666666666666666666bbb66666666666666666666666666666666666666666666666666666666666666666666666666666666666666
 66666666666666666666666666666666666666666666666666666666666666666666666bbb66666666666666666666666666666666666666666666666666666666666666666666666666666666666666
 `;
+            case "image2":
+            case "monster":return img`
+. . . . f f f f f f f . . . . 
+. . f f a a a a a a a f f . . 
+. f a a a a a a a a 1 a a f . 
+. f a a 1 a a a a a 1 a a f . 
+f a a a 1 a a a a a 1 a a a f 
+f a a a 1 a a a a a 1 a a a f 
+f a a a 1 a a a a a 1 a a a f 
+f a a d a a a a a d a a 1 a f 
+f a a d a a a a d d a 1 1 a f 
+f a 1 d a a a a d a a 1 d a f 
+f a 1 1 a a a d d a 1 1 d a f 
+. f a 1 1 a a d 1 1 1 a d f . 
+. f a a 1 1 1 1 1 a a a d f . 
+. . f f a a a a a a a f f . . 
+. . . . f f f f f f f . . . . 
+`;
         }
         return null;
     })

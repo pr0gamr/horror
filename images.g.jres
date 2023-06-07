@@ -4,6 +4,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "scare1"
     },
+    "image2": {
+        "data": "hwQPAA8AAAAAAP///w8AAAD/qqqq+g8A8Kqqqhqh+gDwqqra3RH6AK8aEaGqGqEPr6qqqqqqoQ+vqqqqqqqhD6+qqqqq3aEPr6qqqt0doQ+vqqrarRqqD68REaGqEaoP8KqqqhGh+gDwqqoa0d39AAD/qqqq+g8AAAD///8PAAA=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "monster"
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",

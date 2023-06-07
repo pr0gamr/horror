@@ -2,6 +2,9 @@ namespace SpriteKind {
     export const jumpscare = SpriteKind.create()
     export const wallmaker = SpriteKind.create()
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
+    game.gameOver(true)
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.jumpscare, function (sprite, otherSprite) {
     if (timer1 <= -180) {
         timer1 = 60
@@ -20,11 +23,23 @@ scene.onOverlapTile(SpriteKind.jumpscare, assets.tile`jumpscare`, function (spri
 controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     Render.toggleViewMode()
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprites.destroyAllSpritesOfKind(SpriteKind.jumpscare)
+    current_x = Render.getRenderSpriteInstance().x
+    current_y = Render.getRenderSpriteInstance().y
+    scene.setBackgroundImage(assets.image`scare1`)
+    tiles.setCurrentTilemap(tilemap`level2`)
+    Render.getRenderSpriteInstance().x = 155
+    Render.getRenderSpriteInstance().y = 115
+    pause(2000)
+    game.gameOver(false)
+})
 let current_y = 0
 let current_x = 0
 let wallmaker: Sprite = null
 let scare: Sprite = null
 let timer1 = 0
+game.setGameOverScoringType(game.ScoringType.None)
 timer1 = -180
 Render.takeoverSceneSprites()
 tiles.setCurrentTilemap(tilemap`level1`)
@@ -194,6 +209,15 @@ for (let value of tiles.getTilesByType(assets.tile`black`)) {
     tiles.setWallAt(wallmaker.tilemapLocation(), true)
     sprites.destroy(wallmaker)
 }
+let monster = sprites.create(assets.image`monster`, SpriteKind.Enemy)
+tiles.placeOnRandomTile(monster, assets.tile`transparency16`)
+tiles.placeOnRandomTile(Render.getRenderSpriteInstance(), assets.tile`transparency16`)
+monster.setFlag(SpriteFlag.GhostThroughWalls, true)
+monster.follow(Render.getRenderSpriteInstance(), 10)
+forever(function () {
+    pause(5000)
+    info.setScore(Math.round(Math.sqrt(Math.abs((Render.getRenderSpriteInstance().x - monster.x) * (Render.getRenderSpriteInstance().x - monster.x) + (Render.getRenderSpriteInstance().y - monster.y) * (Render.getRenderSpriteInstance().y - monster.y)))))
+})
 forever(function () {
     timer1 += -1
     if (timer1 == 0) {
