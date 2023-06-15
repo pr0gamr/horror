@@ -155,7 +155,7 @@ let cycle = 0
 let wallmaker: Sprite = null
 let scare: Sprite = null
 let timer1 = 0
-Render.moveWithController(2, 3, 0)
+Render.moveWithController(2, 3, 1)
 game.showLongText("Start?", DialogLayout.Center)
 game.setGameOverScoringType(game.ScoringType.None)
 timer1 = -180
@@ -522,6 +522,6 @@ forever(function () {
             tiles.setWallAt(wallmaker.tilemapLocation(), true)
             sprites.destroy(wallmaker)
         }
-        Render.moveWithController(2, 3, 0)
+        Render.moveWithController(2, 3, 1)
     }
 })
